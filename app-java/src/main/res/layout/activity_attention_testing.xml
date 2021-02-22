@@ -132,7 +132,7 @@
                 android:background="@drawable/button_yellow_shape_round"
                 android:layout_marginRight="20dp"
                 android:textColor="@color/blue"
-                android:text="@string/connect" />
+                android:text="開始測驗" />
 
 <!--            <Button-->
 <!--                android:id="@+id/btn_start_monitoring"-->

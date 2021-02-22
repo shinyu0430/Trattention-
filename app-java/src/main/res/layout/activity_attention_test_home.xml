@@ -138,13 +138,15 @@
 
 
 
-    <TextView
-        android:id="@+id/textView_congrat"
+    <Button
+        android:id="@+id/btn_home_start"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
-        android:textColor="@color/blue"
-        android:layout_marginTop="30dp"
-        android:textSize="40dp"
-        android:text="恭喜完成此次測驗！！！" />
+        android:background="@drawable/button_shape_round"
+        android:layout_marginTop="40dp"
+        android:paddingHorizontal="40dp"
+        android:letterSpacing="0.3"
+        android:textColor="#ffffff"
+        android:text="開始測驗" />
 </LinearLayout>

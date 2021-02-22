@@ -10,11 +10,13 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".AttentionTestResult"></activity>
+        <activity android:name=".AttentionTestResult">
+
+        </activity>
         <activity android:name=".AttentionTesting" />
+        <activity android:name=".AttentionTestHome" ></activity>
         <activity
-            android:name=".AttentionTestIntro"
-            android:screenOrientation="landscape">
+            android:name=".AttentionTestIntro">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <action android:name="android.intent.action.VIEW" />

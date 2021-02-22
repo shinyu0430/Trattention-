@@ -4,6 +4,7 @@ import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -133,6 +134,26 @@ public class AttentionTesting extends AppCompatActivity {
             AlertDialog dialog = builder.create();
             dialog.show();
 
+            // Hide after some seconds
+            final Handler handler  = new Handler();
+            final Runnable runnable = new Runnable() {
+                @Override
+                public void run() {
+                    if (dialog.isShowing()) {
+                        dialog.dismiss();
+                    }
+                }
+            };
+
+            dialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
+                @Override
+                public void onDismiss(DialogInterface dialog) {
+                    handler.removeCallbacks(runnable);
+                }
+            });
+
+            handler.postDelayed(runnable, 1500);
+
         }
 
         tvState.setText(state.toString());
@@ -216,14 +237,14 @@ public class AttentionTesting extends AppCompatActivity {
         AlertDialog.Builder builder = new AlertDialog.Builder(AttentionTesting.this);
         builder.setMessage("本次專注力測驗結果："+test +"/100");
 
-//        LayoutInflater inflater = AttentionTesting.this.getLayoutInflater();
-//        builder.setView(inflater.inflate(R.layout.dialog_test_result, null));
 
         builder.setNegativeButton("完成", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int id) {
+
                     Intent intent = new Intent();
                     intent.putExtra("attention", test);
+
                     intent.setClass(AttentionTesting.this , AttentionTestResult.class);
                     startActivity(intent);
             }

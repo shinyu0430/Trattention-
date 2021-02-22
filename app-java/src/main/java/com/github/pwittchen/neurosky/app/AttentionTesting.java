@@ -1,14 +1,19 @@
 package com.github.pwittchen.neurosky.app;
 
 import android.app.Dialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.LayoutInflater;
+import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -50,11 +55,13 @@ public class AttentionTesting extends AppCompatActivity {
         getSupportActionBar().hide(); // hide the title bar
         this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
                 WindowManager.LayoutParams.FLAG_FULLSCREEN); //enable full screen
-        //路徑：src/main/res/layout/activity_attention_testing.xml
+
         setContentView(R.layout.activity_attention_testing);
 //    Toast.makeText(AttentionTestIntro.this,"Firebase connection sucess",Toast.LENGTH_LONG).show();
         ButterKnife.bind(this);
 
+        Button connect_btn=(Button) findViewById(R.id.btn_stop_monitoring);
+        connect_btn.setVisibility(View.GONE);
         neuroSky = createNeuroSky();
     }
 
@@ -96,6 +103,36 @@ public class AttentionTesting extends AppCompatActivity {
     private void handleStateChange(final State state) {
         if (neuroSky != null && state.equals(State.CONNECTED)) {
             neuroSky.start();
+            Button stop_btn=(Button) findViewById(R.id.btn_stop_monitoring);
+            stop_btn.setVisibility(View.VISIBLE);
+
+            Button connect_btn=(Button) findViewById(R.id.btn_connect);
+            connect_btn.setVisibility(View.GONE);
+
+            TextView connect_intro_textView=(TextView) findViewById(R.id.textView＿connect_intro);
+            connect_intro_textView.setVisibility(View.GONE);
+
+            TextView connect_article_textView=(TextView) findViewById(R.id.textView＿article);
+            connect_article_textView.setVisibility(View.VISIBLE);
+
+            AlertDialog.Builder builder = new AlertDialog.Builder(AttentionTesting.this);
+
+            LayoutInflater inflater = AttentionTesting.this.getLayoutInflater();
+            builder.setView(inflater.inflate(R.layout.dialog_testing_startwarn, null));
+
+//            builder.setMessage("開始專注力測驗");
+//            builder.setPositiveButton("現在就去", new DialogInterface.OnClickListener() {
+//                public void onClick(DialogInterface dialog, int id) {
+//                }
+//            });
+//            builder.setNegativeButton("稍後", new DialogInterface.OnClickListener() {
+//                @Override
+//                public void onClick(DialogInterface dialogInterface, int id) {
+//                }
+//            });
+            AlertDialog dialog = builder.create();
+            dialog.show();
+
         }
 
         tvState.setText(state.toString());
@@ -131,10 +168,7 @@ public class AttentionTesting extends AppCompatActivity {
 //        break;
         }
 
-//腦波儀的ATTENTION、MEDITATION
-//    Log.d(LOG_TAG, String.format("%s: %d", signal.toString(), signal.getValue()));
-//    Log.d("測試",String.valueOf(signal.getTotal_value()));
-//    Log.d("測2",String.valueOf(signal.getCount_value()));
+
 
     }
 
@@ -149,7 +183,7 @@ public class AttentionTesting extends AppCompatActivity {
 
 
 
-    //腦波儀a b 那些波不重要，而且我根本沒帶也有欸
+    //腦波儀a b 那些波不重要，
     private void handleBrainWavesChange(final Set<BrainWave> brainWaves) {
         //for(:) 取出brainWaves的所有元素
         //
@@ -165,23 +199,44 @@ public class AttentionTesting extends AppCompatActivity {
     @OnClick(R.id.btn_connect) void connect() {
         try {
             neuroSky.connect();
+
+
         } catch (BluetoothNotEnabledException e) {
             Toast.makeText(this, e.getMessage(), Toast.LENGTH_SHORT).show();
             Log.d(LOG_TAG, e.getMessage());
         }
     }
 
-    @OnClick(R.id.btn_start_monitoring) void startMonitoring() {
-        neuroSky.start();
-    }
+//    @OnClick(R.id.btn_start_monitoring) void startMonitoring() {
+//        neuroSky.start();
+//    }
 
     @OnClick(R.id.btn_stop_monitoring) void stopMonitoring() {
         neuroSky.stop();
-//傳值到下一頁
-        Dialog dialog = new Dialog(this);
-        dialog.setContentView(R.layout.activity_attention_test_alert);
+        AlertDialog.Builder builder = new AlertDialog.Builder(AttentionTesting.this);
+        builder.setMessage("本次專注力測驗結果："+test +"/100");
 
-        dialog.show(); //顯示對話框
+//        LayoutInflater inflater = AttentionTesting.this.getLayoutInflater();
+//        builder.setView(inflater.inflate(R.layout.dialog_test_result, null));
+
+        builder.setNegativeButton("完成", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int id) {
+                    Intent intent = new Intent();
+                    intent.putExtra("attention", test);
+                    intent.setClass(AttentionTesting.this , AttentionTestResult.class);
+                    startActivity(intent);
+            }
+        });
+        AlertDialog dialog = builder.create();
+        dialog.show();
+
+
+//傳值到下一頁
+//        Dialog dialog = new Dialog(this);
+//        dialog.setContentView(R.layout.activity_attention_test_alert);
+//
+//        dialog.show(); //顯示對話框
 
 //        Intent intent = new Intent();
 //        intent.putExtra("attention", test);

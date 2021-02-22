@@ -12,7 +12,9 @@
         android:theme="@style/AppTheme">
         <activity android:name=".AttentionTestResult"></activity>
         <activity android:name=".AttentionTesting" />
-        <activity android:name=".AttentionTestIntro">
+        <activity
+            android:name=".AttentionTestIntro"
+            android:screenOrientation="landscape">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <action android:name="android.intent.action.VIEW" />
